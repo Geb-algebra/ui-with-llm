@@ -1,53 +1,47 @@
 import { type MetaFunction, json, type LoaderFunctionArgs } from '@remix-run/node';
-import { Link, Outlet, useLoaderData } from '@remix-run/react';
-import { useState } from 'react';
-import Overlay from '~/components/Overlay.tsx';
-import { authenticator } from '~/services/auth.server.ts';
+import { Link, Outlet } from '@remix-run/react';
+import logo from '../assets/logo.png';
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  const user = await authenticator.isAuthenticated(request, {
-    failureRedirect: '/welcome',
-  });
-  return json(user);
+  return json({});
 }
 
 export const meta: MetaFunction = () => {
-  return [{ title: 'New Remix App' }, { name: 'description', content: 'Welcome to Remix!' }];
+  return [{ title: 'Velocure' }];
 };
 
 export default function Index() {
-  const user = useLoaderData<typeof loader>();
-
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-
   return (
     <>
       <div className="w-full h-screen">
-        <Overlay isShown={isMenuOpen} setIsShown={setIsMenuOpen}>
-          <div className="absolute right-6 top-20 w-64 bg-white border border-gray-300 rounded-lg overflow-hidden z-10">
-            <Link
-              to="/settings"
-              onClick={() => setIsMenuOpen(false)}
-              className="block px-4 py-2 text-gray-800 hover:bg-gray-100"
-            >
-              Settings
-            </Link>
-            <Link to="/logout" className="block px-4 py-2 text-gray-800 hover:bg-gray-100">
-              Log Out
-            </Link>
-          </div>
-        </Overlay>
         <nav className="fixed w-full h-16 flex justify-between items-center bg-white border-b border-gray-300">
-          <Link to="/">
-            <h1 className="text-2xl font-bold mx-6">8bit stack</h1>
+          <Link to="/" className="flex px-6 items-center h-16 gap-2">
+            <img src={logo} alt="" width={48} height={48} />
+            <h1 className="text-2xl text-primary font-serif font-bold">Velocure</h1>
           </Link>
-          <button className="px-6 h-full" onClick={() => setIsMenuOpen(true)}>
-            <h2>{user.name}</h2>
-          </button>
+          <div className="h-16 px-6 flex items-center gap-6">
+            <Link to="/service">サービス</Link>
+            <Link to="/case">実績</Link>
+            <Link to="/news">ニュース</Link>
+            <Link to="/company">会社情報</Link>
+            <Link to="/ir">IR情報</Link>
+            <Link to="/recruit">採用情報</Link>
+            <Link to="/contact">お問い合わせ</Link>
+          </div>
         </nav>
-        <div className="pt-16">
+        <main className="pt-16">
           <Outlet />
-        </div>
+        </main>
+        <footer className="w-full px-6 h-16 flex items-center gap-6 bg-primary text-white">
+          <h1 className="text-2xl font-serif font-bold">Velocure</h1>
+          <Link to="/service">サービス</Link>
+          <Link to="/case">実績</Link>
+          <Link to="/news">ニュース</Link>
+          <Link to="/company">会社情報</Link>
+          <Link to="/ir">IR情報</Link>
+          <Link to="/recruit">採用情報</Link>
+          <Link to="/contact">お問い合わせ</Link>
+        </footer>
       </div>
     </>
   );
